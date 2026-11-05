@@ -60,4 +60,14 @@ In the last scenario the tuner found the planted pattern on its own: *"Number ca
 - Your typed answers and the relevant card text are sent to the model API for grading. Your source material is sent once, when cards are written.
 - Tests: `python3 -m unittest discover -s tests`
 
+## Why I built this
+
+Spaced repetition works, but it has always asked two things of you that most people won't do: write good cards, and trust a scheduler that was tuned on someone else's memory. I wanted to see what happens when a model takes over both.
+
+Writing the cards was the easy part. The harder question was whether a model can look at my review history and actually improve the scheduler, or whether it would just produce confident-sounding parameter changes. So nothing it proposes goes live on its say-so. Every proposal is replayed against my full history, and it only gets offered to me if it predicts what I remembered better than the current settings. Before trusting that loop on myself, I built simulated learners with known memory quirks to see if the model could find them. It mostly could. That's the table above, including the run where it came out level with the defaults.
+
+The grading went the same way. The model tells me what I missed, and once I've missed the same card a couple of times, it stops re-explaining the textbook answer and works from my wrong answers instead. A generic explanation is fine the first time, but a repeat miss usually means my mental model is off in a specific way.
+
+I also wanted it to work on anything, not one subject. Point it at an article, a folder of notes or a PDF, and every card has to quote the source word for word, so a card can't teach you something the material never said.
+
 MIT licensed.
