@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>learnloop</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%234F5BD5%27 stroke-width=%272.5%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M17 2l4 4-4 4M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAF8;--panel:#FFF;--ink:#17171A;--muted:#6B6B73;--faint:#A3A3AB;--line:#E7E6E1;--accent:#4F5BD5;--accent-soft:#ECEEFB;--good:#2F7A55;--good-soft:#E5F2EA;--hard:#9A6A12;--hard-soft:#F6EEDC;--again:#B23A48;--again-soft:#F7E7E9;--easy:#2D5E9E;--easy-soft:#E3ECF8}
+@media (prefers-color-scheme:dark){:root{--bg:#111113;--panel:#18181B;--ink:#EDEDF0;--muted:#9C9CA5;--faint:#5E5E66;--line:#2A2A2F;--accent:#8C96F0;--accent-soft:#23264A;--good:#5CC08B;--good-soft:#1C3328;--hard:#D9A646;--hard-soft:#372C17;--again:#E06C7A;--again-soft:#3A1F24;--easy:#7BA7E6;--easy-soft:#1D2A3D}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:28px 16px 80px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:-.01em}
+.brand svg{color:var(--accent)}
+nav{display:flex;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:3px}
+nav button{border:0;background:none;color:var(--muted);font:500 13px Inter;padding:6px 12px;border-radius:6px;cursor:pointer}
+select{border:1px solid var(--line);background:var(--panel);color:var(--ink);font:500 13px Inter;padding:7px 8px;border-radius:8px;max-width:160px}
+nav button.on{background:var(--bg);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-bottom:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:24px}
+.src{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{font-size:11px;padding:2px 7px;border-radius:99px;background:var(--bg);border:1px solid var(--line);text-transform:none;letter-spacing:0}
+.q{font:500 22px/1.35 Fraunces,Georgia,serif;margin:12px 0 18px;letter-spacing:-.01em}
+textarea{width:100%;min-height:110px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:15px/1.5 Inter;padding:12px}
+textarea:focus{outline:2px solid var(--accent-soft);border-color:var(--accent)}
+.row{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);font:500 14px Inter;padding:8px 14px;border-radius:8px;cursor:pointer}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.hint{color:var(--faint);font-size:12px;margin-left:auto}
+.section{margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.verdict{display:inline-flex;align-items:center;gap:6px;font-weight:600;padding:3px 10px;border-radius:99px;font-size:13px}
+.v-again{color:var(--again);background:var(--again-soft)}.v-hard{color:var(--hard);background:var(--hard-soft)}.v-good{color:var(--good);background:var(--good-soft)}.v-easy{color:var(--easy);background:var(--easy-soft)}
+ul{margin:6px 0 0;padding-left:18px}li{margin:2px 0}
+.missed li{color:var(--again)}
+.quote{font-size:13px;color:var(--muted);border-left:2px solid var(--line);padding-left:10px;margin:8px 0}
+.explain{background:var(--accent-soft);border-radius:8px;padding:14px 16px;white-space:pre-wrap}
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.grades button{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:9px 6px;font:500 13px Inter;color:var(--ink);cursor:pointer}
+.grades button.sel{outline:2px solid currentColor}
+.grades button small{display:block;color:var(--faint);font-weight:400;font-size:11px}
+.g-again{color:var(--again)!important}.g-hard{color:var(--hard)!important}.g-good{color:var(--good)!important}.g-easy{color:var(--easy)!important}
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty h2{font:500 24px Fraunces,serif;color:var(--ink);margin:0 0 6px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat b{display:block;font-size:22px;font-weight:600;letter-spacing:-.02em}
+.stat span{font-size:12px;color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+.panel h3{margin:0 0 12px;font-size:14px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-weight:500}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%;background:var(--good)}
+.fc{display:flex;gap:6px;margin-top:4px}
+.fc div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:86px;text-align:center;font-size:11px;color:var(--muted)}
+.fc i{display:block;background:var(--ink);opacity:.8;border-radius:3px 3px 0 0;margin-bottom:4px}
+.muted{color:var(--muted)}.small{font-size:13px}
+.proposal{border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-top:12px}
+.diff td:nth-child(3){font-weight:600}
+.err{color:var(--again);font-size:13px;margin-top:8px}
+.deckitem{border-bottom:1px solid var(--line);padding:12px 0}
+.deckitem:last-child{border:0}
+.deckitem .qq{font-weight:500}
+details summary{cursor:pointer;color:var(--muted);font-size:13px}
+@media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}.grades{grid-template-columns:repeat(2,1fr)}.q{font-size:19px}.hint{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
+      learnloop
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+    <select id="deckSel" title="Deck"></select>
+    <nav>
+      <button data-v="review" class="on">Review</button>
+      <button data-v="progress">Progress</button>
+      <button data-v="deck">Deck</button>
+    </nav>
+    </div>
+  </header>
+  <main id="main"></main>
+</div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const api = async (path, body) => {
+  const r = await fetch(path, body ? {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body)} : {});
+  const j = await r.json();
+  if (!r.ok || j.error) throw new Error(j.error || r.statusText);
+  return j;
+};
+const fmtDays = d => d < 1/24 ? `${Math.max(1, Math.round(d*1440))} min` : d < 1 ? `${Math.round(d*24)} h` : d < 60 ? `${Math.round(d)} d` : `${Math.round(d/30)} mo`;
+const GRADES = [['again','Again','forgot'],['hard','Hard','partial'],['good','Good','got it'],['easy','Easy','instant']];
+
+let view = 'review', state = {}, deckChoice = '';
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => go(b.dataset.v));
+function go(v){ view = v; document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v)); ({review, progress, deck})[v](); }
+
+/* ---------- review ---------- */
+async function review(){
+  $('#main').innerHTML = '<div class="empty">Loading</div>';
+  const q = await api('/api/queue'+dq());
+  state = {queue: q.queue, i: 0, meta: q, done: 0};
+  showCard();
+}
+function showCard(){
+  const {queue, i, meta} = state;
+  if (i >= queue.length){
+    const next = meta.next_due ? fmtDays((meta.next_due*1000 - Date.now())/86400000) : null;
+    $('#main').innerHTML = `<div class="empty"><h2>${state.done ? 'Done for now' : 'Nothing due'}</h2>
+      <div>${state.done ? `${state.done} reviewed this session. ` : ''}${next ? `Next card due in ${next}.` : ''}
+      ${meta.unseen_remaining ? `<br>${meta.unseen_remaining} new cards waiting; up to ${meta.new_per_day} unlock each day.` : ''}</div></div>`;
+    return;
+  }
+  const c = queue[i];
+  state.card = c; state.t0 = Date.now(); state.graded = null; state.choice = null;
+  $('#main').innerHTML = `
+    <div class="meta"><span>${i+1} of ${queue.length}</span><span>${c.is_new ? 'New card' : 'Review'}</span></div>
+    <div class="card">
+      <div class="src">${esc(c.deck)} · ${esc(c.source_title)} <span class="pill">${esc(c.kind)}</span></div>
+      <div class="q">${esc(c.question)}</div>
+      <textarea id="ans" placeholder="Answer from memory, in your own words"></textarea>
+      <div class="row">
+        <button class="btn primary" id="submit">Check answer</button>
+        <button class="btn" id="dunno">I don't know</button>
+        <span class="hint">Cmd+Enter to check</span>
+      </div>
+      <div id="result"></div>
+    </div>`;
+  const ta = $('#ans'); ta.focus();
+  ta.onkeydown = e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submit(); };
+  $('#submit').onclick = () => submit();
+  $('#dunno').onclick = () => submit(true);
+}
+async function submit(dunno){
+  const c = state.card, answer = dunno ? '' : $('#ans').value.trim();
+  if (!dunno && !answer) return $('#ans').focus();
+  state.ms = Date.now() - state.t0;
+  $('#submit').parentElement.style.display = 'none'; $('#ans').disabled = true;
+  $('#result').innerHTML = '<div class="section muted small">Grading against the key points</div>';
+  try {
+    state.graded = dunno ? {grade:'again', missed_points:c.key_points, misconception:'', feedback:'Here is the answer.'}
+                         : await api('/api/grade', {card_id:c.id, answer});
+  } catch(e){ state.graded = {grade:null, missed_points:[], misconception:'', feedback:'', error:`Grading failed: ${e.message} Pick a grade yourself.`}; }
+  state.answer = answer; state.choice = state.graded.grade;
+  renderResult();
+}
+function renderResult(){
+  const c = state.card, g = state.graded;
+  const missed = g.missed_points?.length ? `<div class="label" style="margin-top:12px">Missed</div><ul class="missed">${g.missed_points.map(m=>`<li>${esc(m)}</li>`).join('')}</ul>` : '';
+  $('#result').innerHTML = `
+    <div class="section">
+      ${g.error ? `<div class="err">${esc(g.error)}</div>` : ''}
+      ${g.grade ? `<span class="verdict v-${g.grade}">${GRADES.find(x=>x[0]===g.grade)[1]}</span>` : ''}
+      <span class="small" style="margin-left:8px">${esc(g.feedback)}</span>
+      ${g.misconception ? `<div class="small" style="margin-top:8px;color:var(--again)">Misconception: ${esc(g.misconception)}</div>` : ''}
+      ${missed}
+    </div>
+    <div class="section">
+      <div class="label">Answer</div><div>${esc(c.answer)}</div>
+      <div class="label" style="margin-top:12px">Key points</div><ul>${c.key_points.map(k=>`<li>${esc(k)}</li>`).join('')}</ul>
+      <details style="margin-top:10px"><summary>From ${esc(c.source_title)}</summary><div class="quote">${esc(c.quote)}</div>${/^https?:/.test(c.source_uri) ? `<a class="small muted" href="${esc(c.source_uri)}" target="_blank">${esc(c.source_uri)}</a>` : `<span class="small muted">${esc(c.source_uri)}</span>`}</details>
+    </div>
+    ${c.explanation ? `<div class="section"><div class="label">Written for your repeat misses</div><div class="explain">${esc(c.explanation)}</div></div>` : ''}
+    <div class="section">
+      <div class="label">Grade <span style="text-transform:none;letter-spacing:0;font-weight:400">(override with 1-4, Enter to confirm)</span></div>
+      <div class="grades">${GRADES.map(([k,l,s],n)=>`<button data-g="${k}" class="g-${k} ${state.choice===k?'sel':''}">${n+1} ${l}<small>${s}</small></button>`).join('')}</div>
+      <div class="row"><button class="btn primary" id="next" ${state.choice?'':'disabled'}>Next</button><span class="hint" id="nexthint"></span></div>
+      <div id="explainslot"></div>
+    </div>`;
+  document.querySelectorAll('.grades button').forEach(b => b.onclick = () => { state.choice = b.dataset.g; renderResult(); });
+  $('#next').onclick = record;
+}
+document.addEventListener('keydown', e => {
+  if (view !== 'review' || !state.graded || document.activeElement?.tagName === 'TEXTAREA') return;
+  if ('1234'.includes(e.key) && e.key.length === 1){ state.choice = GRADES[+e.key-1][0]; renderResult(); }
+  if (e.key === 'Enter' && state.choice && !state.recording) record();
+});
+async function record(){
+  if (state.recording) return; state.recording = true;
+  const c = state.card, g = state.graded;
+  $('#next').disabled = true;
+  $('#nexthint').textContent = 'Saving';
+  try {
+    const r = await api('/api/review', {card_id:c.id, grade:state.choice, model_grade:g.grade, answer:state.answer,
+      missed_points:g.missed_points, misconception:g.misconception, ms:state.ms});
+    state.done++;
+    if (r.explanation && r.explanation !== c.explanation){
+      $('#explainslot').innerHTML = `<div class="section"><div class="label">You've missed this one more than once. Here is a different angle</div><div class="explain">${esc(r.explanation)}</div>
+        <div class="row"><button class="btn primary" id="cont">Continue</button><span class="hint">Back in ${fmtDays(r.interval_days)}</span></div></div>`;
+      $('#cont').onclick = advance; $('#cont').focus();
+      state.recording = false; state.graded = null;
+      if (state.choice === 'again') state.queue.push({...c, explanation:r.explanation, is_new:false});
+      return;
+    }
+    if (state.choice === 'again') state.queue.push({...c, explanation:r.explanation, is_new:false});
+    advance();
+  } catch(e){ $('#nexthint').textContent = 'Save failed: ' + e.message; $('#next').disabled = false; }
+  state.recording = false;
+}
+function advance(){ state.i++; state.recording = false; showCard(); }
+
+/* ---------- progress ---------- */
+async function progress(){
+  $('#main').innerHTML = '<div class="empty">Loading</div>';
+  const s = await api('/api/stats'+dq());
+  const t = s.totals, rp = s.replay, maxF = Math.max(1, ...s.forecast);
+  const days = ['Today','+1','+2','+3','+4','+5','+6'];
+  const srcs = s.sources.sort((a,b)=>(b.recall??-1)-(a.recall??-1));
+  $('#main').innerHTML = `
+    <div class="stats">
+      <div class="stat"><b>${t.due_now}</b><span>due now</span></div>
+      <div class="stat"><b>${t.seen}<span class="muted" style="font-size:14px"> / ${t.cards}</span></b><span>cards started</span></div>
+      <div class="stat"><b>${t.reviews}</b><span>reviews</span></div>
+      <div class="stat"><b>${rp.n ? Math.round(100*rp.bins.reduce((a,b)=>a+b.obs*b.n,0)/rp.n)+'%' : '--'}</b><span>recall on reviews</span></div>
+    </div>
+    <div class="panel"><h3>Next 7 days</h3>
+      <div class="fc">${s.forecast.map((n,k)=>`<div><i style="height:${Math.round(48*n/maxF)}px"></i>${n}<br>${days[k]}</div>`).join('')}</div></div>
+    <div class="panel"><h3>By source</h3><table>
+      <tr><th>Source</th><th class="num">Started</th><th>Est. recall now</th></tr>
+      ${srcs.map(p=>`<tr><td>${esc(p.title)}<div class="muted small">${esc(p.deck)}</div></td><td class="num">${p.seen}/${p.cards}</td>
+        <td>${p.recall==null?'<span class="muted">--</span>':`<div style="display:flex;gap:8px;align-items:center"><div class="bar" style="flex:1"><i style="width:${p.recall*100}%"></i></div><span class="small">${Math.round(p.recall*100)}%</span></div>`}</td></tr>`).join('')}
+    </table></div>
+    <div class="panel"><h3>Scheduler</h3>
+      <div class="small muted">The scheduler predicts your chance of recalling each card before you see it. Replaying your full history scores how well those predictions match what actually happened (log loss, lower is better). A tuning pass asks the model to propose new parameters from that evidence; a proposal is kept only if it predicts your past recall better.</div>
+      <table style="margin-top:12px">
+        <tr><th>Scored reviews</th><td class="num">${rp.n}</td></tr>
+        <tr><th>Log loss</th><td class="num">${rp.log_loss ?? '--'}</td></tr>
+        <tr><th>Target retention</th><td class="num">${Math.round(s.params.target_retention*100)}%</td></tr>
+      </table>
+      ${rp.bins.length ? `<div class="label" style="margin-top:14px">Calibration</div><table><tr><th>Predicted</th><th class="num">Observed</th><th class="num">n</th></tr>
+        ${rp.bins.map(b=>`<tr><td>${Math.round(b.pred*100)}%</td><td class="num">${Math.round(b.obs*100)}%</td><td class="num">${b.n}</td></tr>`).join('')}</table>` : ''}
+      ${Object.keys(rp.by_kind).length ? `<div class="label" style="margin-top:14px">By card kind</div><table><tr><th>Kind</th><th class="num">Predicted</th><th class="num">Observed</th><th class="num">n</th></tr>
+        ${Object.entries(rp.by_kind).map(([k,v])=>`<tr><td>${k}</td><td class="num">${Math.round(v.pred*100)}%</td><td class="num">${Math.round(v.obs*100)}%</td><td class="num">${v.n}</td></tr>`).join('')}</table>` : ''}
+      <div class="row"><button class="btn primary" id="tune">Review my learning and tune the scheduler</button></div>
+      <div id="tuneout"></div>
+      ${s.tuning_history.length ? `<details style="margin-top:14px"><summary>Tuning history</summary><table>${s.tuning_history.map(h=>`<tr><td class="small">${new Date(h.ts*1000).toLocaleDateString()}</td><td class="small">${h.status}</td><td class="num small">${h.loss_before} to ${h.loss_after}</td></tr><tr><td colspan="3" class="small muted">${esc(h.rationale)}</td></tr>`).join('')}</table></details>` : ''}
+    </div>
+    <div class="panel"><h3>Trouble spots</h3>
+      ${s.trouble.length ? s.trouble.map(x=>`<div class="deckitem"><div class="qq">${esc(x.card.question)}</div><div class="small muted">${esc(x.card.source_title)}, missed ${x.misses} times</div>
+        ${x.explanation ? `<details style="margin-top:6px"><summary>Tailored explanation</summary><div class="explain" style="margin-top:6px">${esc(x.explanation)}</div></details>` : ''}</div>`).join('')
+        : '<div class="small muted">Cards you miss twice or more show up here, each with an explanation written from your wrong answers.</div>'}
+    </div>`;
+  $('#tune').onclick = tune;
+}
+async function tune(){
+  const out = $('#tuneout'); $('#tune').disabled = true;
+  out.innerHTML = '<div class="small muted" style="margin-top:10px">Reviewing your history. This takes up to a minute.</div>';
+  try {
+    const r = await api('/api/tune', {});
+    const flat = (p, pre='') => Object.entries(p).flatMap(([k,v]) => typeof v === 'object' ? flat(v, pre+k+'.') : [[pre+k, v]]);
+    const cur = Object.fromEntries(flat(r.current));
+    const changed = flat(r.params).filter(([k,v]) => Math.abs(v - cur[k]) > 1e-6);
+    out.innerHTML = `<div class="proposal">
+      <div class="small">${esc(r.rationale)}</div>
+      ${changed.length ? `<table class="diff" style="margin-top:10px"><tr><th>Parameter</th><th class="num">Now</th><th class="num">Proposed</th></tr>
+        ${changed.map(([k,v])=>`<tr><td class="small">${k}</td><td class="num small">${+cur[k].toFixed(3)}</td><td class="num small">${+v.toFixed(3)}</td></tr>`).join('')}</table>` : '<div class="small muted" style="margin-top:8px">No changes proposed.</div>'}
+      <div class="small" style="margin-top:10px">Replayed on ${r.n} reviews: log loss ${r.loss_before} now, ${r.loss_after} proposed.
+        ${r.improves ? '' : '<b>Not an improvement, so it was not kept.</b>'}</div>
+      ${r.improves && changed.length ? `<div class="row"><button class="btn primary" id="apply">Apply</button></div>` : ''}
+    </div>`;
+    if ($('#apply')) $('#apply').onclick = async () => { await api('/api/tune/apply', {id:r.id}); progress(); };
+  } catch(e){ out.innerHTML = `<div class="err">${esc(e.message)}</div>`; }
+  $('#tune').disabled = false;
+}
+
+/* ---------- deck ---------- */
+async function deck(){
+  const list = (await api('/api/cards'+dq())).cards;
+  if (!list.length){ $('#main').innerHTML = emptyDecks(); return; }
+  const byPaper = {};
+  list.forEach(c => (byPaper[c.source_id] ||= {title:c.source_title, deck:c.deck, url:c.source_uri, cards:[]}).cards.push(c));
+  $('#main').innerHTML = Object.values(byPaper).map(p => `<div class="panel"><h3>${esc(p.title)}</h3>
+    <div class="small muted" style="margin-top:-8px;margin-bottom:6px">${esc(p.deck)}${/^https?:/.test(p.url) ? ` · <a href="${esc(p.url)}" target="_blank" style="color:inherit">source</a>` : ''}</div>
+    ${p.cards.map(c=>`<div class="deckitem"><div class="qq">${esc(c.question)} <span class="pill">${esc(c.kind)}</span></div>
+      <details><summary>Answer</summary><div class="small" style="margin-top:6px">${esc(c.answer)}</div></details></div>`).join('')}</div>`).join('');
+}
+
+function dq(){ return deckChoice ? '?deck=' + encodeURIComponent(deckChoice) : ''; }
+function emptyDecks(){ return `<div class="empty"><h2>No cards yet</h2><div>Add material from a terminal:<br><code>learnloop add &lt;deck&gt; &lt;file, folder or URL&gt;</code></div></div>`; }
+(async () => {
+  let saved = ''; try { saved = localStorage.getItem('learnloop.deck') || ''; } catch(e){}
+  const {decks} = await api('/api/decks');
+  const sel = $('#deckSel');
+  sel.innerHTML = `<option value="">All decks</option>` + decks.map(d=>`<option value="${esc(d.deck)}">${esc(d.deck)} (${d.cards})</option>`).join('');
+  if (decks.some(d=>d.deck===saved)) sel.value = saved;
+  deckChoice = sel.value;
+  sel.onchange = () => { deckChoice = sel.value; try { localStorage.setItem('learnloop.deck', sel.value); } catch(e){} go(view); };
+  if (!decks.length){ $('#main').innerHTML = emptyDecks(); return; }
+  go('review');
+})();
+</script>
+</body>
+</html>

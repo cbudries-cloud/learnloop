@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "learnloop"
+version = "0.1.0"
+description = "A learning loop that tunes itself to you: model-graded recall, a self-tuning scheduler, and explanations for what you keep missing."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+pdf = ["pypdf>=4"]
+
+[project.scripts]
+learnloop = "learnloop.cli:main"
+
+[tool.setuptools]
+packages = ["learnloop"]
+
+[tool.setuptools.package-data]
+learnloop = ["static/*.html"]

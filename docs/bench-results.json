@@ -1,0 +1,70 @@
+[
+ {
+  "scenario": "matches-defaults",
+  "description": "Learner's memory matches the default model (control: tuning should not hurt).",
+  "train_reviews": 2329,
+  "holdout_reviews": 488,
+  "accepted": true,
+  "holdout_log_loss": {
+   "default": 0.3373,
+   "tuned": 0.3372,
+   "oracle": 0.3373
+  },
+  "calibration_gap": {
+   "default": -0.012,
+   "tuned": -0.014
+  },
+  "rationale": "Overall calibration across 2169 scored reviews is already very tight, with every bin within 0.003 of observed, so global parameters are left unchanged. The only systematic gaps are by kind: number (0.831 observed vs 0.841 predicted) and process (0.821 vs 0.829) decay faster than modeled, so their multipliers drop slightly. Distinction (0.881 vs 0.868), fact (0.855 vs 0.847) and application (0.853 vs 0.844) last a bit longer, so their multipliers rise modestly. Moves are kept to roughly half the implied correction to avoid overshooting."
+ },
+ {
+  "scenario": "durable",
+  "description": "Remembers much longer than the defaults assume.",
+  "train_reviews": 1324,
+  "holdout_reviews": 180,
+  "accepted": true,
+  "holdout_log_loss": {
+   "default": 0.1505,
+   "tuned": 0.1069,
+   "oracle": 0.1106
+  },
+  "calibration_gap": {
+   "default": -0.074,
+   "tuned": -0.016
+  },
+  "rationale": "Across 1164 scored reviews, observed recall beats predicted in every bin, for example 0.877 vs 0.741 in the 0.7-0.8 bin and 0.975 vs 0.91 at the top, so I raised growth from 1.6 to 2.0 and modestly raised the hard, good and easy initial stabilities. The low-prediction bins show the largest gap, which suggests post-lapse stability is cut too hard, so lapse_factor goes from 0.3 to 0.4. Distinction (0.98 vs 0.888) and application (0.976 vs 0.888) are the most under-predicted kinds, so they get multipliers above 1. Concept, with the smallest gap (0.93 vs 0.87), stays at 1.0."
+ },
+ {
+  "scenario": "fragile",
+  "description": "Forgets faster than the defaults assume.",
+  "train_reviews": 6454,
+  "holdout_reviews": 4611,
+  "accepted": true,
+  "holdout_log_loss": {
+   "default": 0.6308,
+   "tuned": 0.6098,
+   "oracle": 0.6011
+  },
+  "calibration_gap": {
+   "default": 0.054,
+   "tuned": 0.024
+  },
+  "rationale": "With over 6000 reviews, the model is overconfident, and the gap widens as predicted recall rises: the 0.6 to 0.7 bin is nearly calibrated (0.66 vs 0.654), but the 0.9 to 1.0 bin predicts 0.919 against an observed 0.733. That points to stability growing too fast after successful reviews, so I lowered growth from 1.6 to 1.2, recall_bonus from 1.0 to 0.8, and easy_factor from 1.4 to 1.3. I also trimmed the good, easy, and hard initial stabilities so new cards are not over-trusted early. All six kinds are overpredicted by a similar 6 to 8 points, so kind multipliers stay at 1.0."
+ },
+ {
+  "scenario": "numbers-fade",
+  "description": "Concepts stick but numbers fade fast.",
+  "train_reviews": 3151,
+  "holdout_reviews": 1342,
+  "accepted": true,
+  "holdout_log_loss": {
+   "default": 0.5775,
+   "tuned": 0.5551,
+   "oracle": 0.5499
+  },
+  "calibration_gap": {
+   "default": 0.054,
+   "tuned": 0.033
+  },
+  "rationale": "Number cards are the largest group (1347 reviews) and are badly overpredicted (0.763 predicted vs 0.682 observed), with several number cards stuck near minimum stability. I lowered their multiplier to 0.6. Concept, distinction, application and process cards are recalled better than predicted (for example distinction 0.909 vs 0.859 and application 0.900 vs 0.852), so I raised their multipliers modestly. Fact cards are well calibrated and stay at 1.0. Growth is unchanged because the overprediction in the upper calibration bins appears to come mostly from number cards."
+ }
+]
